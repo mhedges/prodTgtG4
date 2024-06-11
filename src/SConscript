@@ -186,7 +186,7 @@ XERCESC_LIBS = [ 'xerces-c' ]
 
 
 mainlib = helper.make_mainlib ( [
-    'Stntuple_mod',
+    #'Stntuple_mod',
     'mu2e_Mu2eG4Helper_Mu2eG4Helper_service',
     'mu2e_Mu2eG4Helper',
     'mu2e_SeedService_SeedService_service',
@@ -243,7 +243,7 @@ mainlib = helper.make_mainlib ( [
 )
 
 helper.make_plugins( [ mainlib,
-                       'Stntuple_mod',
+                       #'Stntuple_mod',
                        'mu2e_Mu2eG4',
                        'mu2e_Mu2eG4Helper_Mu2eG4Helper_service',
                        'mu2e_Mu2eG4Helper',
