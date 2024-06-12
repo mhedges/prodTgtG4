@@ -29,7 +29,6 @@ services : {
   @table::Services.SimAndReco
   TFileService          : { fileName : "prodtgttube.root" }
   GeometryService        : { @table::Services.SimAndReco.GeometryService
-    #//inputFile            : "Offline/Mu2eG4/g4study/g4study_Tube_geom.txt"
     inputFile            : "prodTgtG4/geom/geom_prodTgtTube.txt"
     simulatedDetector    : { tool_type   : "ConstructTgtTube" }
   }
