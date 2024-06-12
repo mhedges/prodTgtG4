@@ -30,7 +30,7 @@ services : {
   TFileService          : { fileName : "prodtgttube.root" }
   GeometryService        : { @table::Services.SimAndReco.GeometryService
     #//inputFile            : "Offline/Mu2eG4/g4study/g4study_Tube_geom.txt"
-    inputFile            : "prodTgtG4Study/geom/geom_prodTgtTube.txt"
+    inputFile            : "prodTgtG4/geom/geom_prodTgtTube.txt"
     simulatedDetector    : { tool_type   : "ConstructTgtTube" }
   }
 }
@@ -129,6 +129,6 @@ physics.producers.g4run.Mu2eG4StackingOnlyCut : @local::mu2eg4NoCut
 services.scheduler.wantSummary: true
 services.TimeTracker.printSummary: true
 #physics.producers.g4run.debug.steppingVerbosityLevel : 1
-#physics.producers.g4run.debug.writeGDML: true
+physics.producers.g4run.debug.writeGDML: true
 physics.producers.g4run.debug.GDMLFileName: "prodtgttube.gdml"
 #physics.producers.g4run.debug.printElements : true
