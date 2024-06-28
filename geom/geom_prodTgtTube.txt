@@ -6,6 +6,8 @@
 //
 
 // Units are mm, MeV
+// Edited by: Albert Szewczyk
+// Modifcations. Geometry file alows for multiple cylinders to be used
 
 
 // Change the name.
@@ -20,38 +22,44 @@ bool g4.placePV                = true;
 // the "World Box"
 
 // a very "thin" vacuum
-string world.materialName        = "G4_Galactic";
+string  world.materialName        = "G4_Galactic";
 
 // make the world boundaries visible
 bool   world.boxVisible          = true;
 // make the volume transparent
 bool   world.boxSolid            = false;
 
-double world.halfLength          = 10.0;
-double world.outerLayerThickness = 0.001;// the world "outer layer" to force a step point
+double world.halfLength          = 500.0;
+double world.outerLayerThickness = 0.01;// the world "outer layer" to force a step point
+
 
 // the target (a tube) for mu2e.studyEnvVersion == 1
 
 bool           tube.visible = true;
 bool           tube.solid   = false;
+// setup for the number of tubes
+int 	       tube.numberOfTubes = 19;
+
 
 // fixme: may need to use pure isotopes
-string         tube.wallMaterialName = "G4_W";
 
-double         tube.rIn        = 0.0;
-double         tube.rOut       = 1.0;
-double         tube.halfLength = 3.0;
-double         tube.phi0       = 0.;
-double         tube.phiSpan    = 360.; // degrees
-double         tube.phiRotZ    =  0.;
-double         tube.sign       =  1.; // for additional 180 deg rotation tests around Y axis (when -1)
+vector<string> tube.wallMaterialName  = {"G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W"};
+vector<double> tube.rIn        = {0,0.63, 0.75, 0.75, 0.75, 0.75, 0.63, 0.75, 0.75, 0.75, 0.75, 1.25, 1.25, 1.25, 1.25, 1.25, 1.25, 1.25, 1.25};
+vector<double> tube.rOut       = {0.25, 0.75, 1.25, 1.25, 1.25, 1.25, 0.75, 1.25, 1.25, 1.25, 1.25, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5};
+vector<double> tube.halfLength = {6, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.5, 0.5, 0.5, 0.5, 6, 6, 6, 6};// half the height 
+vector<double> tube.phi0       = {0, 0, 352.5, 82.5, 172.5, 262.5, 0, 352.5, 82.5, 172.5, 262.5, 0, 0, 0, 0, 351.0, 81.0, 171.0, 261.0};
+vector<double> tube.phiSpan    = {360, 360, 15, 15, 15, 15, 360, 15, 15, 15, 15, 360, 360, 360, 360, 18, 18, 18, 18}; // degrees
+vector<double> tube.phiRotZ    = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+vector<double> tube.sign       = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}; // for additional 180 deg rotation tests around Y axis (when -1)
 
-int            tube.copyNumber = 3; // non 0 for volume tracking purposes
+vector<int>    tube.copyNumber = {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3}; // non 0 for volume tracking purposes
                                     // 0 & 1 are World and an auxiliary
                                     // volume almost filling up the world
 
 // tube position in the world
-vector<double> tube.centerInWorld = {0., 0., 10.};
+vector<string>   tube.centerInWorld = { "0.0, 0.0, 0.0", "0.0, 0.0, 2.0", "0.0, 0.0, 2.0",  "0.0, 0.0, 2.0", "0.0, 0.0, 2.0", "0.0, 0.0, 2.0", "0.0, 0.0, -2.0", "0.0, 0.0, -2.0", "0.0, 0.0, -2.0", "0.0, 0.0, -2.0", "0.0, 0.0, -2.0",
+  "0.0, 0.0, -5.75", "0.0, 0.0, -2.0", "0.0, 0.0, 2.0", "0.0, 0.0, 5.75", "0.0, 0.0, 0.0", "0.0, 0.0, 0.0", "0.0, 0.0, 0.0", "0.0, 0.0, 0.0"};
+
 
 // another target (a plane/box) for mu2e.studyEnvVersion == 2
 
