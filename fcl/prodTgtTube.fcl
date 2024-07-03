@@ -130,6 +130,9 @@ physics.producers.g4run.Mu2eG4StackingOnlyCut : @local::mu2eg4NoCut
 services.scheduler.wantSummary: true
 services.TimeTracker.printSummary: true
 #physics.producers.g4run.debug.steppingVerbosityLevel : 1
-physics.producers.g4run.debug.writeGDML: false
+physics.producers.g4run.debug.writeGDML: true
 physics.producers.g4run.debug.GDMLFileName: "prodtgttube.gdml"
+
+// overwrite the file to prevent a core drump when the program is run.
+physics.producers.g4run.debug.overwriteGDML: true
 #physics.producers.g4run.debug.printElements : true

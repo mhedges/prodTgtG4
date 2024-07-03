@@ -130,14 +130,18 @@ namespace mu2e {
     // adds a new cylinder to the array
      tubeBase = "Tube " + to_string(i+1);
    
-     TubsParams tubeParams(tubeRIns[i], tuberOuts[i], halfLengths[i]);
+     
+     
+
+    
      // directly finds material from the G4 library because the material was retrived earlier
      // The material 
      G4Material* tubeMaterial = findMaterialOrThrow(material[i]);
      
      const G4ThreeVector tubeCenterInWorld(center[i][0],center[i][1],center[i][2]);
+     // tube paramaters are taken in as an array of double parameters instead.
     VolumeInfo tubeVInfo(nestTubs( tubeBase,
-                                   tubeParams,
+                                   {tubeRIns[i], tuberOuts[i], halfLengths[i],phiZeroes[i],phiSpans[i]},
                                    tubeMaterial,
                                    0, // no rotation, 
                                    tubeCenterInWorld,
