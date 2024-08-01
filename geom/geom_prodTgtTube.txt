@@ -60,23 +60,45 @@ vector<int>    tube.copyNumber = {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3}; // non
 vector<string>   tube.centerInWorld = { "0.0, 0.0, 0.0", "0.0, 0.0, 2.0", "0.0, 0.0, 2.0",  "0.0, 0.0, 2.0", "0.0, 0.0, 2.0", "0.0, 0.0, 2.0", "0.0, 0.0, -2.0", "0.0, 0.0, -2.0", "0.0, 0.0, -2.0", "0.0, 0.0, -2.0", "0.0, 0.0, -2.0",
   "0.0, 0.0, -5.75", "0.0, 0.0, -2.0", "0.0, 0.0, 2.0", "0.0, 0.0, 5.75", "0.0, 0.0, 0.0", "0.0, 0.0, 0.0", "0.0, 0.0, 0.0", "0.0, 0.0, 0.0", "0.0, 0.0, -6", "0.0, 0.0, -6", "0.0, 0.0, -6", "0.0, 0.0, -6", "0.0, 0.0, 6", "0.0, 0.0, 6", "0.0, 0.0, 6", "0.0, 0.0, 6"};
 
-
+// number of boxes
+int box.numberOfBoxes = 2;
+  
 // another target (a plane/box) for mu2e.studyEnvVersion == 2
 
 bool           box.visible = true;
 bool           box.solid   = false;
 
-// fixme: may need to use pure isotopes
-string         box.wallMaterialName = "G4_W";
+// fixme: may need to use pure isotopes.
 
-vector<double> box.halfLengths = {1., 1., 5.0};
+// 20 are parralell to the x axis, last 5 are parrallel to the z axis
 
-int            box.copyNumber = 2; // non 0 for volume tracking purposes
+vector<string> box.wallMaterialName = {"G4_W","G4_W"};
+
+vector<string> box.halfLengths = { "0.1, 0.1, 1.0","0.1, 0.1, 1.0",};
+
+vector<int>            box.copyNumber = {1,1}; // non 0 for volume tracking purposes
                                    // 0 & 1 are World and an auxiliary
                                    // volume almost filling up the world
 
 // box position in the world
-vector<double> box.centerInWorld = {0., 0., 0.};
+vector<string> box.centerInWorld = {"-7., 0., 0.","-7., 0., 0."};
+
+// rotates the boxes by ter respective degreees
+
+
+
+vector<double> polytube.centerInWorld = {0,0,0};
+ string polytube.material = "G4_W";
+int polytube.horizontalWires = 10;
+int polytube.verticalWires = 5;
+double polytube.halfLength = 6;
+double polytube.rIn = 0.25;
+double polytube.rOut = 0.63;
+double polytube.phiSpans = 0.1;
+double polytube.horizontalTubeLength = 0;
+double polytube.verticalTubeSpan = 0.05;
+
+
 
 //
 // This tells emacs to view this file in c++ mode.
