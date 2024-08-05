@@ -75,8 +75,8 @@ namespace mu2e {
 
     // Extract box information from the config file.
 
-     G4bool boxVisible        = _config.getBool("box.visible",true);
-     G4bool boxSolid          = _config.getBool("box.solid",true);
+    // G4bool boxVisible        = _config.getBool("box.visible",true);
+    //  G4bool boxSolid          = _config.getBool("box.solid",true);
 
      // Due to creating multiple tubes or boxes,
      // Using material finder may not be neccesary as you can directly fin the material Using findaMaterialOrThrow.
@@ -252,7 +252,7 @@ namespace mu2e {
 
     
     // Box parameters
-   
+	/*
     int numberOfBoxes=  _config.getInt("box.numberOfBoxes");
     
     vector<string> boxMaterials;
@@ -271,14 +271,14 @@ namespace mu2e {
     
     string boxBase;
     
-    /*
     
-rotation matrix code to rotate the tubes around 
+    
+  //rotation matrix code to rotate the tubes around 
 
 G4RotationMatrix* rotation = new G4RotationMatrix();
 rotation->rotateY(90.0*deg); // Rotate 90 degrees around the y-axis
      
-    */
+	
 
      for ( int i = 0; i < numberOfBoxes; i++){
        
@@ -313,7 +313,7 @@ rotation->rotateY(90.0*deg); // Rotate 90 degrees around the y-axis
 
      }
     
-
+ */
 
      // traversing through the polly cones
 
