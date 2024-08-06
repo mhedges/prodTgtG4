@@ -21,6 +21,7 @@
 #include <vector>
 #include <cstring>
 #include <array>
+#include <sstream>
 
 // Mu2e includes.
 
@@ -59,6 +60,7 @@ using namespace std;
 // potentially use G4 beamline
 // no imeadeate way
 namespace mu2e {
+  double sciToDub(const string& str);
   vector<array<double, 3>> parsePoints(const vector<string>& points);
   class ConstructTgtTube: public InitEnvToolBase {
   public:
@@ -324,36 +326,45 @@ rotation->rotateY(90.0*deg); // Rotate 90 degrees around the y-axis
   // function to parse a vector string retrieved from the geometry file to turn into a vector of arrays
   // the offline doesnt seem to support taking vectors of arrays or 2dimensional vectors
   //when Simple config is being used.
-vector<array<double, 3>> parsePoints(const vector<string>& points) {
-    vector<array<double, 3>> set;
-    string toAdd;
-    int index = 0;
+  double sciToDub(const std::string& str) {
+    stringstream ss(str);
+    double d = 0;
+    ss >> d;
+
+    if (ss.fail()) {
+        string s = "Unable to format ";
+        s += str;
+        s += " as a number!";
+        throw runtime_error(s);
+    }
+
+    return d;
+}
+vector<std::array<double, 3>> parsePoints(const vector<string>& points) {
+    vector<std::array<double, 3>> set;
     array<double, 3> currentTriplet;
+    int index = 0;
 
     for (const auto& coordinate : points) {
-      for (char c : coordinate) {
-        if ((c >= '0' && c <= '9') || c == '.' || c == '-' || c == 'e' || c == 'E') {
-          toAdd += c;
-        } else if (c == ',' || c == '}') {
-          if (!toAdd.empty()) {
-            currentTriplet[index++] = stod(toAdd);
-            toAdd.clear();
-          }
+        stringstream ss(coordinate);
+        string token;
+
+        while (getline(ss, token, ',')) {
+            try {
+                double value = sciToDub(token);
+                currentTriplet[index++] = value;
+            } catch (const runtime_error& e) {
+                cerr << e.what() << endl;
+            }
+            // Add the triplet to the result vector if it's complete
+            if (index == 3) {
+                set.push_back(currentTriplet);
+                index = 0;
+            }
         }
-      }
-      // Handle the last value
-      if (!toAdd.empty()) {
-        currentTriplet[index++] = stod(toAdd);
-        toAdd.clear();
-      }
-      // Add the triplet to the result vector if it's complete
-      if (index == 3) {
-        set.push_back(currentTriplet);
-        index = 0;
-      }
     }
     return set;
-  }
+}
   
 }
 
