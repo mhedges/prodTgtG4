@@ -13,7 +13,6 @@
 // Modifications: Created a loop in the fucntion to allow multiple shapes to be tested in the geometry enivronment.
 // Lines of code can be modified to use G4 UnionSolid, G4 MultiUnion, or neither of them
 // G4 MultiUnion is not supported on Root as of this code being pushed
-// locations to remark code to change the solids used can be done
 #include "art/Utilities/ToolMacros.h"
 #include "art/Framework/Services/Registry/ServiceDefinitionMacros.h"
 
@@ -51,7 +50,7 @@
 #include "Geant4/G4RotationMatrix.hh"
 #include "Offline/Mu2eG4Helper/inc/Mu2eG4Helper.hh"
 #include "CLHEP/Units/SystemOfUnits.h"
-
+// other files included outside G4 and the Offline
 #include "WireMesh.hh"
 
 using namespace std;
@@ -75,16 +74,11 @@ namespace mu2e {
     const bool doSurfaceCheck      = _config.getBool("g4.doSurfaceCheck");
     const bool placePV             = true;
 
-    // Extract box information from the config file.
 
-    // G4bool boxVisible        = _config.getBool("box.visible",true);
-    //  G4bool boxSolid          = _config.getBool("box.solid",true);
-
-     // Due to creating multiple tubes or boxes,
-     // Using material finder may not be neccesary as you can directly fin the material Using findaMaterialOrThrow.
+    // Due to creating multiple tubes, using material finder may not be neccesary as you can directly find the material Using findaMaterialOrThrow.
+    // This will be used to create the mesh of wires.
     MaterialFinder materialFinder(_config);
     // arrays of information for each cylinder are declared
-    // information from the geometry file(ProdTgt4) tube is retrieved using the online function
     G4bool tubeVisible        = _config.getBool("tube.visible",true);
     G4bool tubeSolid          = _config.getBool("tube.solid",true);
     string tubeBase = "tube";
@@ -106,7 +100,7 @@ namespace mu2e {
     _config.getVectorDouble("tube.sign",signs);
     vector <int> copyNumbers;
     _config.getVectorInt("tube.copyNumber", copyNumbers);
-    //varaibales to be used to retrieve the variables from the vector string, convert them to doubles
+    //variables to be used to retrieve the variables from the vector string, convert them to doubles
     vector<string> centerCoordinates;
     _config.getVectorString("tube.centerInWorld", centerCoordinates);
     vector <string> material;
@@ -115,18 +109,14 @@ namespace mu2e {
     
     vector<array<double, 3>> center;
     center =  parsePoints(centerCoordinates);
-   // Loop creates multiple tube with the information passed down.
+    // Constructing the base structure of the Production Target
     for ( int i = 0; i < numberOfTubes; i++){
        
     // adds a new cylinder to the array
      tubeBase = "Tube " + to_string(i+1);
    
      
-     
-
-    
-     // directly finds material from the G4 library because the material was retrived earlier
-     // The material 
+     // Directly finds material from the G4 library because the material was retrived earlier
      G4Material* tubeMaterial = findMaterialOrThrow(material[i]);
      
      const G4ThreeVector tubeCenterInWorld(center[i][0],center[i][1],center[i][2]);
@@ -149,8 +139,6 @@ namespace mu2e {
                                    ));
     }
     //polycone paramters and algorithm
-
-
     vector<double> polyconeCenter;
     _config.getVectorDouble("polytube.centerInWorld", polyconeCenter);
     int horizontalWires = _config.getInt("polytube.horizontalWires");
@@ -159,9 +147,9 @@ namespace mu2e {
     double pRin = _config.getDouble("polytube.rIn");
     double pRout = _config.getDouble("polytube.rOut");
     double verticalSpan = _config.getDouble("polytube.verticalTubeSpan");
-      G4Material* pMaterial = materialFinder.get("polytube.material");
+    G4Material* pMaterial = materialFinder.get("polytube.material");
   
-      TubeWireMesh metalMesh({polyconeCenter[0],polyconeCenter[1],polyconeCenter[2]}, horizontalWires, verticalWires, pHalfLength, pRin, pRout, false, verticalSpan);
+    TubeWireMesh metalMesh({polyconeCenter[0],polyconeCenter[1],polyconeCenter[2]}, horizontalWires, verticalWires, pHalfLength, pRin, pRout, false, verticalSpan);
 
  
     metalMesh.createWireMeshSolid();
@@ -226,7 +214,7 @@ namespace mu2e {
       // end of non Union Solids used
 	    
  }
- // closes Union Solid/ Remark if not used.
+ // closes Union Solid. Remark if not used.
  
  //  UnionSolid -> Voxelize();
 
@@ -250,82 +238,12 @@ namespace mu2e {
 	// */
     
 
- 
-
-    
-    // Box parameters
-	/*
-    int numberOfBoxes=  _config.getInt("box.numberOfBoxes");
-    
-    vector<string> boxMaterials;
-    _config.getVectorString("box.wallMaterialName",boxMaterials);
-
-    vector <string> boxDimensions;
-    _config.getVectorString("box.halfLengths", boxDimensions);
-    vector<array<double, 3>> boxParams = parsePoints(boxDimensions);
-    
-    vector<int> boxNumbers;
-    _config.getVectorInt("box.copyNumber", boxNumbers);
-    
-    vector<string> boxCenterCoordinates;
-    _config.getVectorString("box.centerInWorld", boxCenterCoordinates);
-    vector<array<double, 3>> boxCenter = parsePoints(boxCenterCoordinates);
-    
-    string boxBase;
-    
-    
-    
-  //rotation matrix code to rotate the tubes around 
-
-G4RotationMatrix* rotation = new G4RotationMatrix();
-rotation->rotateY(90.0*deg); // Rotate 90 degrees around the y-axis
-     
-	
-
-     for ( int i = 0; i < numberOfBoxes; i++){
-       
-    // adds a new cylinder to the array
-    boxBase  = "Box " + to_string(i+1);
-    
-    G4Material* boxMaterial =  findMaterialOrThrow(boxMaterials[i]);
-
-    const G4ThreeVector boxCenterInWorld(boxCenter[i][0],boxCenter[i][1],boxCenter[i][2]);
-
-    
-    G4RotationMatrix* boxRotation = new G4RotationMatrix();
-    boxRotation->rotateY(90.0*CLHEP::deg); // Rotate 90 degrees around the y-axis
-    vector<double> boxParamVec(boxParams[i].begin(), boxParams[i].end());
-    VolumeInfo boxVInfo(nestBox( boxBase,
-                                 boxParamVec,
-                                 boxMaterial,
-                                 boxRotation, // no rotation
-                                 boxCenterInWorld,
-                                 parentVInfo,
-                                 boxNumbers[i],
-                                 // we assign a non 0 copy nuber for
-                                 // volume tracking purposes
-                                 boxVisible,
-                                 orange,
-                                 boxSolid,
-                                 forceAuxEdgeVisible,
-                                 placePV,
-                                 doSurfaceCheck
-                                 ));
-
-
-     }
-    
- */
-
-     // traversing through the polly cones
-
-     
-   
     return 0;
   }
-  // function to parse a vector string retrieved from the geometry file to turn into a vector of arrays
-  // the offline doesnt seem to support taking vectors of arrays or 2dimensional vectors
-  //when Simple config is being used.
+ 
+ 
+
+  
   double sciToDub(const std::string& str) {
     stringstream ss(str);
     double d = 0;
@@ -340,6 +258,8 @@ rotation->rotateY(90.0*deg); // Rotate 90 degrees around the y-axis
 
     return d;
 }
+   // function to parse a vector string retrieved from the geometry file to turn into a vector of arrays
+   // The Offline does not seem to support taking vectors of arrays or 2-Dimensional vectors
 vector<std::array<double, 3>> parsePoints(const vector<string>& points) {
     vector<std::array<double, 3>> set;
     array<double, 3> currentTriplet;
