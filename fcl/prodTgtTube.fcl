@@ -22,10 +22,11 @@ process_name : g4study
 # Start form an empty source
 source : {
   module_type : EmptyEvent
-  maxEvents : 100
+  maxEvents : 1
 }
 
-services : {
+services : {// absolute basics of the configuration of the job
+
   @table::Services.SimAndReco
   TFileService          : { fileName : "prodtgttube.root" }
   GeometryService        : { @table::Services.SimAndReco.GeometryService
@@ -100,7 +101,7 @@ outputs:  {
 
 # Initialze seeding of random engines: do not put these lines in base .fcl files for grid jobs.
 services.SeedService.baseSeed         :   8
-services.SeedService.maxUniqueEngines :  20
+services.SeedService.maxUniqueEngines : 20
 #services.message.destinations.log.noTimeStamps : true
 # inform the geometry service it is not the standard Mu2e Detector
 # done via the tool_type above now
@@ -111,6 +112,7 @@ physics.producers.g4run.physics.physicsListName : "ShieldingM"
 #physics.producers.g4run.physics.bfieldMaxStep   : 500000. // not implemented (no field)
 physics.producers.g4run.debug.diagLevel         : 1
 physics.producers.g4run.debug.printElements     : true
+
 physics.producers.g4run.debug.worldVerbosityLevel : 2
 #physics.producers.g4run.debug.checkFieldMap : 0 // not implemented (no field)
 physics.producers.g4run.TrajectoryControl.mcTrajectoryMinSteps:     0
@@ -130,4 +132,7 @@ services.TimeTracker.printSummary: true
 #physics.producers.g4run.debug.steppingVerbosityLevel : 1
 physics.producers.g4run.debug.writeGDML: true
 physics.producers.g4run.debug.GDMLFileName: "prodtgttube.gdml"
+
+// overwrite the file to prevent a core drump when the program is run.
+physics.producers.g4run.debug.overwriteGDML: true
 #physics.producers.g4run.debug.printElements : true

@@ -6,6 +6,8 @@
 //
 
 // Units are mm, MeV
+// Edited by: Albert Szewczyk
+// Modifcations. Geometry file alows for multiple cylinders to be used and a wire mesh from a few paramters
 
 
 // Change the name.
@@ -14,63 +16,90 @@ string detector.name           = "g4study";
 bool g4.visible                = true;
 bool g4.solid                  = false;
 bool g4.forceAuxEdgeVisible    = true;    // make the volume mesh visible
-bool g4.doSurfaceCheck         = false;   // do not check for overlaps
+bool g4.doSurfaceCheck         = true;   // do not check for overlaps, enabled to be true to allow compatibility with FLUKA
 bool g4.placePV                = true;
 
 // the "World Box"
 
 // a very "thin" vacuum
-string world.materialName        = "G4_Galactic";
+string  world.materialName        = "G4_Galactic";
 
 // make the world boundaries visible
 bool   world.boxVisible          = true;
 // make the volume transparent
 bool   world.boxSolid            = false;
 
-double world.halfLength          = 10.0;
-double world.outerLayerThickness = 0.001;// the world "outer layer" to force a step point
+double world.halfLength          = 500.0;
+double world.outerLayerThickness = 0.01;// the world "outer layer" to force a step point
+
 
 // the target (a tube) for mu2e.studyEnvVersion == 1
 
 bool           tube.visible = true;
 bool           tube.solid   = false;
+// setup for the number of tubes
+int 	       tube.numberOfTubes = 39;
+
 
 // fixme: may need to use pure isotopes
-string         tube.wallMaterialName = "G4_W";
-
-double         tube.rIn        = 0.0;
-double         tube.rOut       = 1.0;
-double         tube.halfLength = 3.0;
-double         tube.phi0       = 0.;
-double         tube.phiSpan    = 360.; // degrees
-double         tube.phiRotZ    =  0.;
-double         tube.sign       =  1.; // for additional 180 deg rotation tests around Y axis (when -1)
-
-int            tube.copyNumber = 3; // non 0 for volume tracking purposes
+// phi0, phispan, and phiRotZ must be in Radians
+// As of this current modification, the current set containt the folliwng 1, center tube, 2-6 1st ring holder, 7-11, 2nd ring Holder 12-15, tube connectors 16-27 ,28-39are the parts on the outers ends of the tubes
+vector<string> tube.wallMaterialName  = {"G4_W",   "G4_W","G4_W","G4_W","G4_W","G4_W",  "G4_W","G4_W","G4_W","G4_W","G4_W",   "G4_W","G4_W","G4_W","G4_W",    "G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W",   "G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W","G4_W"};
+vector<double> tube.rIn        = {0,  0.63, 0.75, 0.75, 0.75, 0.75,   0.63, 0.75, 0.75, 0.75, 0.75,   1.25, 1.25, 1.25, 1.25,  1.25, 1.25, 1.25, 1.25,   1.25, 1.25, 1.25, 1.25,  1.25, 1.25, 1.25, 1.25, 1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5, 1.5 ,1.5 ,1.5};
+vector<double> tube.rOut       = {0.25, 0.75, 1.25, 1.25, 1.25, 1.25, 0.75, 1.25, 1.25, 1.25, 1.25, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5,1.5, 1.5, 1.5, 1.5,1.5, 1.5, 1.5, 1.625,1.625,1.625, 1.75,1.75,1.75, 1.625,1.625, 1.625 ,1.75,1.75,1.75};
+vector<double> tube.halfLength = {6,   0.25, 0.25, 0.25, 0.25, 0.25,   0.25, 0.25, 0.25, 0.25, 0.25,   0.5, 0.5, 0.5, 0.5,  1.5, 1.5, 1.5, 1.5,  1.375, 1.375, 1.375, 1.375, 1.375, 1.375, 1.375, 1.375,   0.0625, 0.0625, 0.0625,  0.09375,0.09375,0.09375,  0.0625, 0.0625, 0.0625, 0.09375, 0.09375, 0.09375};// half the height
+vector<double> tube.phi0 = {0.0000,  0.0000,6.1510,1.4400,3.0110,4.5818,   0.0000,6.1510,1.4400,3.0110,4.5818,   0.0000,0.0000,0.0000,0.0000,  6.1250,1.4140,2.9840,4.5553,  6.1250,1.4140,2.9840,4.5553,  6.1250,1.4140,2.9840,4.5553,        5.7596,1.5708,3.66519, 0, 2.0944, 4.18878, 5.7596,1.5708,3.66519, 0, 2.0944, 4.18878};
+vector<double> tube.phiSpan = {6.2832,  6.2832,0.2618,0.2618,0.2618,0.2618,   6.2832,0.2618,0.2618,0.2618,0.2618,  6.2832,6.2832,6.2832,6.2832,   0.3142,0.3142,0.3142,0.3142,  0.3142,0.3142,0.3142,0.3142,  0.3142,0.3142,0.3142,0.3142,      0.52358,0.52358,0.52358,1.57073,1.57073,1.57073,  0.52358,0.52358,0.52358,1.57073,1.57073,1.57073};
+vector<double> tube.phiRotZ    = {0,   0, 0, 0, 0, 0,    0, 0, 0, 0,0,   0, 0, 0, 0,  0, 0, 0, 0 ,  0, 0, 0, 0 , 0, 0, 0, 0 , 0,0,0,0,0,0,0,0,0,0,0,0 };
+vector<double> tube.sign       = {1,   1, 1, 1, 1, 1,    1, 1, 1, 1, 1,   1, 1, 1, 1, 1, 1, 1, 1 ,  1, 1, 1, 1 ,  1, 1, 1, 1 ,  1,1,1,1,1,1,1,1,1,1,1,1}; // for additional 180 deg rotation tests around Y axis (when -1)
+vector<int>    tube.copyNumber = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}; // non 0 for volume tracking purposes
                                     // 0 & 1 are World and an auxiliary
                                     // volume almost filling up the world
 
 // tube position in the world
-vector<double> tube.centerInWorld = {0., 0., 10.};
+vector<string>   tube.centerInWorld = { "0.0, 0.0, 0.0",     "0.0, 0.0, 2.0", "0.0, 0.0, 2.0",  "0.0, 0.0, 2.0", "0.0, 0.0, 2.0", "0.0, 0.0, 2.0",      "0.0, 0.0, -2.0", "0.0, 0.0, -2.0", "0.0, 0.0, -2.0", "0.0, 0.0, -2.0", "0.0, 0.0, -2.0",        "0.0, 0.0, -5.75", "0.0, 0.0, -2.0", "0.0, 0.0, 2.0", "0.0, 0.0, 5.75", "0.0, 0.0, 0.0", "0.0, 0.0, 0.0", "0.0, 0.0, 0.0", "0.0, 0.0, 0.0",   "0.0, 0.0, -3.875", "0.0, 0.0,  -3.875", "0.0, 0.0,  -3.875", "0.0, 0.0,  -3.875", "0.0, 0.0,  3.875", "0.0, 0.0, 3.875", "0.0, 0.0, 3.875", "0.0, 0.0, 3.875",      "0.0, 0.0, -6", "0.0, 0.0, -6", "0.0, 0.0, -6", "0.0, 0.0, -6", "0.0, 0.0, -6", "0.0, 0.0, -6", "0.0, 0.0, 6", "0.0, 0.0, 6", "0.0, 0.0, 6",             "0.0, 0.0, 6", "0.0, 0.0, 6", "0.0, 0.0, 6"};
 
+// number of boxes
+int box.numberOfBoxes = 2;
+  
 // another target (a plane/box) for mu2e.studyEnvVersion == 2
 
 bool           box.visible = true;
 bool           box.solid   = false;
 
-// fixme: may need to use pure isotopes
-string         box.wallMaterialName = "G4_W";
+// fixme: may need to use pure isotopes.
 
-vector<double> box.halfLengths = {1., 1., 5.0};
 
-int            box.copyNumber = 2; // non 0 for volume tracking purposes
+// Used for multiple boxes
+// boxes are not needed for 
+vector<string> box.wallMaterialName = {"G4_W","G4_W"};
+
+vector<string> box.halfLengths = { "0.1, 0.1, 1.0","0.1, 0.1, 1.0",};
+
+vector<int>            box.copyNumber = {1,1}; // non 0 for volume tracking purposes
                                    // 0 & 1 are World and an auxiliary
                                    // volume almost filling up the world
 
 // box position in the world
-vector<double> box.centerInWorld = {0., 0., 0.};
+vector<string> box.centerInWorld = {"-7., 0., 0.","-7., 0., 0."};
 
-//
+
+
+
+// paramters for wire mesh
+vector<double> polytube.centerInWorld = {0,0,0};
+ string polytube.material = "G4_W";
+int polytube.horizontalWires = 10;
+int polytube.verticalWires = 5;
+double polytube.halfLength = 6;
+double polytube.rIn = 0.25;
+double polytube.rOut = 0.63;
+double polytube.phiSpans = 0.1;
+double polytube.horizontalTubeLength = 0;
+double polytube.verticalTubeSpan = 0.05;
+
+
+
 // This tells emacs to view this file in c++ mode.
 // Local Variables:
 // mode:c++
